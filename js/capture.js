@@ -1,4 +1,5 @@
 // source code from https://github.com/mdn/samples-server/tree/master/s/webrtc-capturestill
+// https://github.com/webrtc/samples/blob/gh-pages/src/content/getusermedia/gum/js/main.js
 
 (function() {
     // The width and height of the captured photo. We will set the
@@ -27,27 +28,43 @@
       photo = document.getElementById('photoDL');
       startbutton = document.getElementById('startbutton');
   
-      navigator.getMedia = ( navigator.getUserMedia ||
-                             navigator.webkitGetUserMedia ||
-                             navigator.mozGetUserMedia ||
-                             navigator.msGetUserMedia);
+      // navigator.getMedia = ( navigator.getUserMedia ||
+      //                        navigator.webkitGetUserMedia ||
+      //                        navigator.mozGetUserMedia ||
+      //                        navigator.msGetUserMedia);
   
-      // var wConstrains = { audio: false, video: true};
-      var wConstrains = { audio: false, video: { facingMode: "environment" }};
-      // var wConstrains = { video: true };
-      navigator.getMedia(wConstrains,function(stream) {
-          if (navigator.mozGetUserMedia) {
-            video.mozSrcObject = stream;
-          } else {
-            var vendorURL = window.URL || window.webkitURL;
-            video.src = vendorURL.createObjectURL(stream);
-          }
-          video.play();
-        },
-        function(err) {
-          console.log("An error occured! " + err);
-        }
-      );
+      
+      function handleSuccess(stream) {
+        // if (navigator.mozGetUserMedia) {
+        //   video.mozSrcObject = stream;
+        // } else {
+        //   var vendorURL = window.URL || window.webkitURL;
+        //   video.src = vendorURL.createObjectURL(stream);
+        // }
+        // video.play();
+
+        var videoTracks = stream.getVideoTracks();
+        console.log('Got stream with constraints:', constraints);
+        console.log('Using video device: ' + videoTracks[0].label);
+        stream.oninactive = function() {
+          console.log('Stream inactive');
+        };
+        window.stream = stream; // make variable available to browser console
+        video.srcObject = stream;
+      }
+
+      function handleError(msg, error) {
+        console.log('Error: ', msg, error)
+      }
+
+      // var constrains = window.constraints = { audio: false, video: { facingMode: "environment" }};
+      var constraints = window.constraints = {
+        audio: false,
+        video: true
+      };
+      
+      navigator.mediaDevices.getUserMedia(constraints).
+        then(handleSuccess).catch(handleError);
   
       video.addEventListener('canplay', function(ev){
         if (!streaming) {
