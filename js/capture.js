@@ -120,7 +120,10 @@
       
         var data = canvas.toDataURL('image/png');
         photo.setAttribute('src', data);
-        doScan($('#photoDL')[0])
+        setTimeout(function() {
+          doScan($('#photoDL')[0])
+        },1000)
+        
       } else {
         clearphoto();
       }
