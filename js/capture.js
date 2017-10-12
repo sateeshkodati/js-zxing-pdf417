@@ -32,9 +32,9 @@
                              navigator.mozGetUserMedia ||
                              navigator.msGetUserMedia);
   
-      var wConstrains = { audio: false, video: true};
-      // var constrains = { audio: false, video: { facingMode: "environment" }};
-      var wConstrains = { video: { facingMode: "environment" } };
+      // var wConstrains = { audio: false, video: true};
+      var wConstrains = { audio: false, video: { facingMode: "environment" }};
+      // var wConstrains = { video: true };
       navigator.getMedia(wConstrains,function(stream) {
           if (navigator.mozGetUserMedia) {
             video.mozSrcObject = stream;
