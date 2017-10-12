@@ -57,12 +57,12 @@
         console.log('Error: ', msg, error)
       }
 
-      // var constrains = window.constraints = { audio: false, video: { facingMode: "environment" }};
-      var constraints = window.constraints = {
-        audio: false,
-        video: true
-      };
-      
+      var constrains = window.constraints = { audio: false, video: { facingMode: "environment" }};
+      // var constraints = window.constraints = {
+      //   audio: false,
+      //   video: true
+      // };
+
       navigator.mediaDevices.getUserMedia(constraints).
         then(handleSuccess).catch(handleError);
   
