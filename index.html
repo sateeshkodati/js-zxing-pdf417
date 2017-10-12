@@ -1,10 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Js-ZXing-PDF417 Examples</title>
-</head>
-<body>
-<a href="examples/zxing-pdf417-example1.html">Decoding sample</a>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+        <meta itemprop="description" content="Client-side WebRTC code samples">
+        <meta itemprop="name" content="WebRTC code samples">
+        <meta name="mobile-web-app-capable" content="yes">
+        
+        <title>ZXing-PDF417js example</title>
+        <style>
+            .decodedText {
+                overflow: scroll;
+                max-width: 48%;
+                height: 500px;
+            }
+
+            .error {
+                font-weight: bold;
+                color: red;
+            }
+        </style>
+        <link rel="stylesheet" href="./css/main.css">
+        <script src="./js/BigInteger.min.js"></script>
+        <script src="./js/zxing-pdf417.min.js"></script>
+        <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="./js/capture.js"></script>
+        <script src="./js/scan.js"></script>
+        
+        <script type="text/javascript">
+            var isMobile =  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        </script>
+    </head>
+    <body>
+        
+        <div class="contentarea" id="capureDL">
+            <h1>
+                Scan US Driving license demo using WebRTC and file upload
+            </h1>
+            
+          <div class="camera">
+            <video id="video" autoplay playsinline>Video stream not available.</video>
+            <button id="startbutton">Take photo</button> 
+          </div>
+          <!-- <canvas id="canvasDL"></canvas> -->
+          <div class="output">
+            <img id="photoDL" /> 
+          </div>
+            <p>
+            </p>
+        </div>
+
+        <div id="decodeDL">
+            <form>
+                <input type="file" id="file" />
+                <button id="decode" type="button">Decode</button>
+                <div class="error"></div>
+                <div>
+                    <pre class="decodedText"></pre>
+                </div>
+                <img id="loadedDLPhoto"/>
+            </form>
+        </div>
+    </body>
 </html>
