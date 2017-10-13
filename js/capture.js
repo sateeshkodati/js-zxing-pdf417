@@ -6,8 +6,8 @@
     // width to the value defined here, but the height will be
     // calculated based on the aspect ratio of the input stream.
   
-    var width = 320;    // We will scale the photo width to this
-    var height = 0;     // This will be computed based on the input stream
+    var width = 1280;    // We will scale the photo width to this
+    var height = 720;     // This will be computed based on the input stream
   
     // |streaming| indicates whether or not we're currently streaming
     // video from the camera. Obviously, we start at false.
@@ -26,6 +26,9 @@
       video = document.getElementById('video');
       canvas = document.createElement('canvas') || document.getElementById('canvasDL');
       photo = document.getElementById('photoDL');
+      photo.addEventListener('load',function(){
+        doScan($('#photoDL')[0]);
+      });
       startbutton = document.getElementById('startbutton');
   
       // navigator.getMedia = ( navigator.getUserMedia ||
@@ -51,13 +54,23 @@
         };
         window.stream = stream; // make variable available to browser console
         video.srcObject = stream;
+        video.play();
       }
 
       function handleError(msg, error) {
         console.log('Error: ', msg, error)
       }
 
-      var constrains = window.constraints = { audio: false, video: { facingMode: "environment" }};
+      var constrains = window.constraints = { 
+        audio: false, video: { facingMode: "environment" },
+        width: 1280, height: 720,
+        mandatory: {
+          minWidth: 1280,
+          minHeight: 720,
+          maxWidth: 1280,
+          maxHeight: 720
+        }
+      };
       // var constraints = window.constraints = {
       //   audio: false,
       //   video: true
@@ -68,19 +81,19 @@
   
       video.addEventListener('canplay', function(ev){
         if (!streaming) {
-          height = video.videoHeight / (video.videoWidth/width);
+          // height = video.videoHeight / (video.videoWidth/width);
         
           // Firefox currently has a bug where the height can't be read from
           // the video, so we will make assumptions if this happens.
         
-          if (isNaN(height)) {
-            height = width / (4/3);
-          }
+          // if (isNaN(height)) {
+          //   height = width / (4/3);
+          // }
         
-          video.setAttribute('width', width);
-          video.setAttribute('height', height);
-          canvas.setAttribute('width', width);
-          canvas.setAttribute('height', height);
+          // video.setAttribute('width', width);
+          // video.setAttribute('height', height);
+          // canvas.setAttribute('width', width);
+          // canvas.setAttribute('height', height);
           streaming = true;
         }
       }, false);
@@ -98,10 +111,10 @@
   
     function clearphoto() {
       var context = canvas.getContext('2d');
-      context.fillStyle = "#AAA";
-      context.fillRect(0, 0, canvas.width, canvas.height);
+      // context.fillStyle = "#AAA";
+      // context.fillRect(0, 0, canvas.width, canvas.height);
   
-      var data = canvas.toDataURL('image/png');
+      var data = canvas.toDataURL('image/png', 1.0);
       photo.setAttribute('src', data);
     }
     
@@ -116,13 +129,10 @@
       if (width && height) {
         canvas.width = width;
         canvas.height = height;
-        context.drawImage(video, 0, 0, width, height);
+        context.drawImage(video, 0, 0);
       
-        var data = canvas.toDataURL('image/png');
+        var data = canvas.toDataURL('image/jpg');
         photo.setAttribute('src', data);
-        setTimeout(function() {
-          doScan($('#photoDL')[0])
-        },1000)
         
       } else {
         clearphoto();
