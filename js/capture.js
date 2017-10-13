@@ -1,17 +1,25 @@
 // source code from https://github.com/mdn/samples-server/tree/master/s/webrtc-capturestill
 // https://github.com/webrtc/samples/blob/gh-pages/src/content/getusermedia/gum/js/main.js
-
+var isMobile =  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 (function() {
     // The width and height of the captured photo. We will set the
     // width to the value defined here, but the height will be
     // calculated based on the aspect ratio of the input stream.
   
-    var width = 1280;    // We will scale the photo width to this
-    var height = 720;     // This will be computed based on the input stream
-  
+    // for desktop
+    var dWidth = 640;    // We will scale the photo width to this
+    var dHeight = 480;     // This will be computed based on the input stream
+
+    // for mobile resolution
+    if (isMobile) {
+      dWidth = 720
+      dHeight = 1280
+    }
+    
+    
     // |streaming| indicates whether or not we're currently streaming
     // video from the camera. Obviously, we start at false.
-  
+    
     var streaming = false;
   
     // The various HTML elements we need to configure or control. These
@@ -24,7 +32,9 @@
   
     function startup() {
       video = document.getElementById('video');
-      canvas = document.createElement('canvas') || document.getElementById('canvasDL');
+      canvas = document.createElement('canvas')
+      canvas.width = dWidth;
+      canvas.height = dHeight
       photo = document.getElementById('photoDL');
       photo.addEventListener('load',function(){
         doScan($('#photoDL')[0]);
@@ -63,16 +73,14 @@
 
       var constrains = window.constraints = { 
         audio: false, video: { facingMode: "environment" },
-        width: 1280, height: 720,
+        // width: dWidth, height: dHeight,
         mandatory: {
-          maxWidth: 1280,
-          maxHeight: 720
+          maxWidth: dWidth,
+          maxHeight: dHeight,
+          maxFrameRate: 30,
+          minAspectRatio: 1.77
         }
       };
-      // var constraints = window.constraints = {
-      //   audio: false,
-      //   video: true
-      // };
 
       navigator.mediaDevices.getUserMedia(constraints).
         then(handleSuccess).catch(handleError);
@@ -101,7 +109,7 @@
         ev.preventDefault();
       }, false);
       
-      clearphoto();
+      // clearphoto();
     }
   
     // Fill the photo with an indication that none has been
@@ -109,13 +117,16 @@
   
     function clearphoto() {
       var context = canvas.getContext('2d');
-      // context.fillStyle = "#AAA";
-      // context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = "#AAA";
+      context.fillRect(0, 0, canvas.width, canvas.height);
   
-      var data = canvas.toDataURL('image/jpeg');
-      // var URL.createObjectURL(data);
+      // var data = canvas.toDataURL('image/jpeg');
+      // // var URL.createObjectURL(data);
       // photo.setAttribute('src', data);
-      photo.setAttribute('src', URL.createObjectURL(data))
+      canvas.toBlob(function(blob) {
+        photo.src = URL.createObjectURL(blob);
+      });
+      
       
     }
     
@@ -127,19 +138,24 @@
   
     function takepicture() {
       var context = canvas.getContext('2d');
-      if (width && height) {
-        canvas.width = width;
-        canvas.height = height;
-        context.drawImage(video, 0, 0);
+      if (dWidth && dHeight) {
+        
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        // context.drawImage(video, 0, 0);
       
         // var data = canvas.toDataURL('image/jpg');
         // photo.src = data;
+        // var imageData = context.getImageData(0, 0, dWidth, dHeight);
+
         canvas.toBlob(function(blob) {
           photo.src = URL.createObjectURL(blob);
-        });
+        }, 'image/jpeg', 1);
+        // photo.src = URL.createObjectURL(imageData.data);
+        
+        // photo.src = data
         
       } else {
-        clearphoto();
+        // clearphoto();
       }
     }
   
