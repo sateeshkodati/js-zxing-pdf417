@@ -6,8 +6,8 @@
     // width to the value defined here, but the height will be
     // calculated based on the aspect ratio of the input stream.
   
-    var width = 1440;    // We will scale the photo width to this
-    var height = 1080;     // This will be computed based on the input stream
+    var width = 1280;    // We will scale the photo width to this
+    var height = 720;     // This will be computed based on the input stream
   
     // |streaming| indicates whether or not we're currently streaming
     // video from the camera. Obviously, we start at false.
@@ -63,10 +63,10 @@
 
       var constrains = window.constraints = { 
         audio: false, video: { facingMode: "environment" },
-        width: 1440, height: 1080,
+        width: 1280, height: 720,
         mandatory: {
-          maxWidth: 1440,
-          maxHeight: 1080
+          maxWidth: 1280,
+          maxHeight: 720
         }
       };
       // var constraints = window.constraints = {
