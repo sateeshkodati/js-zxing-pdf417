@@ -130,7 +130,7 @@
       if (width && height) {
         canvas.width = width;
         canvas.height = height;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        context.drawImage(video, 0, 0);
       
         // var data = canvas.toDataURL('image/jpg');
         // photo.src = data;
