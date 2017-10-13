@@ -112,8 +112,11 @@
       // context.fillStyle = "#AAA";
       // context.fillRect(0, 0, canvas.width, canvas.height);
   
-      var data = canvas.toDataURL('image/png', 1.0);
-      photo.setAttribute('src', data);
+      var data = canvas.toDataURL('image/jpeg');
+      // var URL.createObjectURL(data);
+      // photo.setAttribute('src', data);
+      photo.setAttribute('src', URL.createObjectURL(data))
+      
     }
     
     // Capture a photo by fetching the current contents of the video
@@ -127,10 +130,13 @@
       if (width && height) {
         canvas.width = width;
         canvas.height = height;
-        context.drawImage(video, 0, 0);
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-        var data = canvas.toDataURL('image/jpg');
-        photo.setAttribute('src', data);
+        // var data = canvas.toDataURL('image/jpg');
+        // photo.src = data;
+        canvas.toBlob(function(blob) {
+          photo.src = URL.createObjectURL(blob);
+        });
         
       } else {
         clearphoto();
